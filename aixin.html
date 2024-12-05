@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>新年祝语</title>
+		<script src="jquery.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="index.css"/>
+		<link rel="stylesheet" type="text/css" href="mobile.css" media="screen and (max-width:720px)" />
+	</head>
+	<body>
+		<audio id="yy" controls="false" autoplay="true" loop="loop" style="display: none;">
+			<source src="Music/愿你余生漫长.mp3" type="audio/mpeg" />
+		</audio>
+		<audio id="ty" controls="false" autoplay="true" loop="loop" style="display: none;">
+			<source src="Music/太阳.mp3" type="audio/mpeg" />
+		</audio>
+		<!-- 加载 -->
+		<div class="bj">
+			<div class="bj-imgs">
+				<div class="click-tip">请点击爱心！</div>
+				<img onclick="screen()" class="Love" src="img/爱心.png" >
+			</div>
+		</div>
+		<!-- 加载结束 -->
+		
+		
+		<!-- 内容 -->
+		<div class="centent">
+			<div class="centent-warp">
+				<div class="dc">
+					<div class="centent-top">
+						<div class="top-warp">
+							<video style="object-fit: cover;" id="video" class="video" autoplay="" loop="" muted="muted" style="background-image:url(>)">
+									<source src="img/ship2.mp4" type="video/mp4">
+							</video>
+						</div>
+					</div>
+					<div class="centent-center" id="text"></div>
+					<div class="centent-bottom">
+						<div onclick="getClass()" class="auto-btn">自动</div>
+						<div onclick="window.location.href='fireworks.html'" class="manual-btn">手动</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 内容结束 -->
+		
+		
+		<!-- 烟花 -->
+		<div id="container">
+		    <div id="fireworks"><img src="img/fireworks.png" alt=""></div>
+		    <div id="firecracker"><img src="img/firecracker.png" alt="" width="8px"></div>
+		</div>
+		<!-- 烟花结束 -->
+	</body>
+	<script type="text/javascript">
+		let = document.getElementById("yy");
+		let = document.getElementById("ty");
+		ty.pause();
+		video.pause();
+		$(function() {
+			$(".Love").toggleClass("active");
+		})
+		
+		function screen () {
+			$('.bj').delay(100).fadeOut('slow');
+			yy.pause();
+			ty.play();
+			video.play();
+			$(".centent .centent-warp .dc").css({
+				opacity:"1",
+				transform:"scale(1)",
+			})
+			let divTyping = document.getElementById('text');
+			let i = 0,
+				timer = 0,
+				str = '李婧晗同学：\n为了祝贺我们之间的友情，大年三十晚上十二点，我为你在世界各地准备了烟花，不要问我花了多少钱，那都不重要，毕竟友谊无价。'
+			
+			// 计算每个字符的延迟时间：9000ms / 字符总数
+			const typingSpeed = Math.floor(9000 / str.length);
+			
+			function typing() {
+				if (i <= str.length) {
+					divTyping.innerHTML = str.slice(0, i++).replace(/\n/g, '<br>') + '_'
+					timer = setTimeout(typing, typingSpeed)
+				} else {
+					divTyping.innerHTML = str.replace(/\n/g, '<br>') //结束打字,移除 _ 光标
+					clearTimeout(timer)
+				}
+			}
+			typing()
+		}
+		
+		function getRandomColor() {
+			const hue = Math.random() * 360;
+			const saturation = 70 + Math.random() * 30; // 70-100
+			const lightness = 50 + Math.random() * 20;  // 50-70
+			return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+		}
+
+		function createFloatingText(maxDuration = 3) {
+			const text = document.createElement('div');
+			text.className = 'floating-text';
+			text.textContent = '祝李婧晗同学新年快乐！';
+			text.style.color = getRandomColor();
+			
+			// 随机垂直位置
+			text.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+			
+			// 随机动画持续时间
+			const duration = maxDuration * (0.8 + Math.random() * 0.4);
+			text.style.animationDuration = duration + 's';
+			
+			// 随机字大小
+			const baseSize = 16;
+			const variance = 16;
+			text.style.fontSize = (baseSize + Math.random() * variance) + 'px';
+			
+			document.body.appendChild(text);
+			
+			// 动画结束后移除元素
+			setTimeout(() => {
+				text.remove();
+			}, duration * 1000);
+		}
+
+		function startFloatingTexts() {
+			const maxTexts = 800; // 减少最大文字数量以避免性能问题
+			let isReducing = false;
+			let fadeStartTime;
+			let interval;
+			
+			// 20秒后开始减少文字
+			setTimeout(() => {
+				isReducing = true;
+				fadeStartTime = Date.now();
+			}, 20000);
+			
+			interval = setInterval(() => {
+				const currentTexts = document.getElementsByClassName('floating-text').length;
+				
+				if (isReducing) {
+					const elapsedTime = (Date.now() - fadeStartTime) / 1000;
+					
+					if (elapsedTime >= 5) {
+						clearInterval(interval);
+						return;
+					}
+					
+					// 使用平方根函数使减少更自然
+					const generationChance = Math.sqrt(1 - (elapsedTime / 5));
+					const remainingTime = Math.min(3, 5 - elapsedTime);
+					
+					if (Math.random() < generationChance) {
+						createFloatingText(remainingTime);
+					}
+				} else {
+					if (currentTexts < maxTexts) {
+						// 每次生成2-4个文字
+						const count = 2 + Math.floor(Math.random() * 3);
+						for(let i = 0; i < count; i++) {
+							createFloatingText(3);
+						}
+					}
+				}
+			}, 50); // 更频繁地检查和生成
+		}
+
+		function getClass() {
+			$(".centent .centent-top").css({
+					opacity: "0",
+					top: "-500px",
+				})
+			$(".centent .centent-center").css({
+					opacity: "0",
+				})
+			$(".centent .centent-bottom").css({
+					opacity: "0",
+					top: "500px",
+				})
+			$('.centent').delay(100).fadeOut('slow');
+			$("#firecracker").css({
+					transform: "scale(0)",
+					bottom: "60%",
+				})
+			setTimeout(function() {
+					$("#fireworks").css({
+							transform: "scale(1)",
+							opacity: "1",
+						})
+				setTimeout(function() {
+						$("#fireworks").css({
+								opacity: "0",
+							})
+						// 烟花消失后开始文字动画
+						startFloatingTexts();
+						
+						// 修改中间文字生成逻辑，集成到 startFloatingTexts 中
+						let isReducing = false;
+						let fadeStartTime;
+						
+						// 20秒后开始减少文字
+						setTimeout(() => {
+								isReducing = true;
+								fadeStartTime = Date.now();
+							}, 20000);
+						
+						// 中间区域文字生成
+						let centerInterval = setInterval(() => {
+								if (isReducing) {
+										const elapsedTime = (Date.now() - fadeStartTime) / 1000;
+										if (elapsedTime >= 5) {
+												clearInterval(centerInterval);
+												return;
+											}
+										
+										// 使用相同的概率算
+										const generationChance = Math.sqrt(1 - (elapsedTime / 5));
+										const remainingTime = Math.min(3, 5 - elapsedTime);
+										
+										if (Math.random() < generationChance) {
+												const text = document.createElement('div');
+												text.className = 'floating-text';
+												text.textContent = '祝李婧晗同学新年快乐！';
+												text.style.color = getRandomColor();
+												text.style.left = '50%';
+												text.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+												text.style.transform = 'translateX(-50%)';
+												text.style.opacity = '1';
+												document.body.appendChild(text);
+												
+												setTimeout(() => {
+														text.remove();
+													}, remainingTime * 1000);
+											}
+										} else if (document.getElementsByClassName('floating-text').length < 800) {
+												// 正常生成阶段，保持与漂浮文字相同的生成逻辑
+												const count = 1 + Math.floor(Math.random() * 2);
+												for(let i = 0; i < count; i++) {
+														const text = document.createElement('div');
+														text.className = 'floating-text';
+														text.textContent = '祝李婧晗同学新年快乐！';
+														text.style.color = getRandomColor();
+														text.style.left = '50%';
+														text.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+														text.style.transform = 'translateX(-50%)';
+														text.style.opacity = '1';
+														document.body.appendChild(text);
+														
+														setTimeout(() => {
+																text.remove();
+															}, 3000);
+													}
+											}
+										}, 100);
+								
+							}, 1500)
+					}, 2000)
+		}
+	</script>
+</html>
